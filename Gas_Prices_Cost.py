@@ -2,6 +2,7 @@ import urllib.request
 import re
 from statistics import mean
 import os
+import re
 
 province = "quebec"
 city = "laval"
@@ -12,11 +13,20 @@ def getGasPrices(province=province, city=city):
     lastIndexes, prices = [], []
     for match in re.finditer('StationDisplayPrice-module__price___3rARL">', html): 
         lastIndexes.append(match.end())
-    for i in range (0, len(lastIndexes),1):
-        index = int(lastIndexes[i]) + 1
+    
+    for i in range(0, len(lastIndexes),1):
+        index = int(lastIndexes[i])
+        count = 0
         price = ""
-        price += html[index] + html[index+1] + html[index+2] + html[index+3] + html[index+4]
-        prices.append(float(price))
+        
+        while html[index] != '<':
+            price += html[index]
+            index += 1
+        x = re.findall(r"[-+]?\d*\.\d+|\d+", price)
+        rex = re.compile("^[0-9]{3}.[0-9]{1}$")
+        for i in range(0, len(x), 1):
+            if rex.match(x[i]): prices.append(float(x[i]))
+    
     return prices
 
 def getStationAdresses(province=province, city=city):
@@ -82,21 +92,23 @@ def averageGasPrice(list_of_prices):
     average = average[:1] + "." + average[1:]
     return float(average)
 
-def computeGasCost(kmStart, kmEnd, gasPrice):
-    litresPerKm = 9.3/100    
+def computeGasCost(kmStart, kmEnd, gasPrice, litresPer100Km=9.4):
+    litresPerKm = litresPer100Km/100    
     return round(((litresPerKm * (kmStart - kmEnd)) * gasPrice),2) 
 
 # --- Main ---
-os.system("cls")
-print ("----- Gas App -----\n")
-print ("1 - Trip Cost Calculator")
-print (f"2 - View gas prices of default city ({city})")
-print ("3 - View gas prices of another city")
-print ("0 - Exit Program\n")
-choice = input("--> ")
-os.system("cls")
+choice = ""
 
 while choice != "0":
+    
+    os.system("cls")
+    print ("----- Gas App -----\n")
+    print ("1 - Trip Cost Calculator")
+    print (f"2 - View gas prices of default city ({city})")
+    print ("3 - View gas prices of another city")
+    print ("0 - Exit Program\n")
+    choice = input("--> ")
+    os.system("cls")
     
     if choice != "0":
 
@@ -104,7 +116,13 @@ while choice != "0":
             
             kmStart = int(input("Enter the km at the start of the trip: "))
             kmEnd = int(input("Enter the km at the end of the trip: "))
-            print (f"\nKm driven: {kmStart - kmEnd}\nTrip Cost: {computeGasCost(kmStart,kmEnd, averageGasPrice(getGasPrices()))} $\n")
+            lPerKm = input("Enter the amount of litres your car comsumes per 100km or press ENTER for 9.4/100km: ")
+            if lPerKm != "":
+                lPerKm = float(lPerKm)
+                print (f"\nKm driven: {kmStart - kmEnd}\nAverage Gas Price: {str(round(mean(getGasPrices()),1))}$\n\nTrip Cost: {computeGasCost(kmStart,kmEnd, averageGasPrice(getGasPrices()), lPerKm)} $\n")
+            else:
+                print (f"\nKm driven: {kmStart - kmEnd}\nAverage Gas Price: {str(round(mean(getGasPrices()),1))}$\n\nTrip Cost: {computeGasCost(kmStart,kmEnd, averageGasPrice(getGasPrices()))} $\n")
+            
             os.system("pause")
         
         elif choice == "2":
@@ -123,7 +141,7 @@ while choice != "0":
             
             os.system("cls")
             station, price, last_update, address = "Station", "Price","Last Update", "Address"
-            print (f"{station:<25}{price:^25}{last_update:^25}{address:<25}\n")
+            print (f"{station:<25}{price:^25}{last_update:^23}{address:<25}\n")
             for i in range(0, len(getGasPrices(prov, city)), 1):
                 price = str(getGasPrices()[i]) +" $/L"
                 print(f"{getGasStationNames(prov, city)[i]:<25}{price:^25}{lastUpdate(prov, city)[i]:^25}{getStationAdresses(prov, city)[i]:<25}")
