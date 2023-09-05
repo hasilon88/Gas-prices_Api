@@ -2,11 +2,11 @@ import urllib.request
 import re
 
 def gasCosts(province, city):
+    req = urllib.request.Request('https://www.gasbuddy.com/gasprices/' + province + "/" + city, headers={
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'})
+    html = str(urllib.request.urlopen(req).read())
 
     def getGasPrices(province=province, city=city):
-        req = urllib.request.Request('https://www.gasbuddy.com/gasprices/' + province + "/" + city, headers={
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'})
-        html = str(urllib.request.urlopen(req).read())
         lastIndexes, prices = [], []
         for match in re.finditer('StationDisplayPrice-module__price___3rARL">', html):
             lastIndexes.append(match.end())
@@ -28,9 +28,6 @@ def gasCosts(province, city):
 
 
     def getStationAdresses(province=province, city=city):
-        req = urllib.request.Request('https://www.gasbuddy.com/gasprices/' + province + "/" + city, headers={
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'})
-        html = str(urllib.request.urlopen(req).read())
         lastIndexOfAdress, listOfAdresses, listCitiesProvinces, finalList = [], [], [], []
         for match in re.finditer('<div class="StationDisplay-module__address___2_c7v">', html):
             lastIndexOfAdress.append(match.end())
@@ -52,9 +49,6 @@ def gasCosts(province, city):
 
 
     def getGasStationNames(province=province, city=city):
-        req = urllib.request.Request('https://www.gasbuddy.com/gasprices/' + province + "/" + city, headers={
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'})
-        html = str(urllib.request.urlopen(req).read())
         lastIndexOfAdress, gasStations = [], []
         for match in re.finditer(
                 '<h3 class="header__header3___1b1oq header__header___1zII0 header__midnight___1tdCQ header__snug___lRSNK StationDisplay-module__stationNameHeader___1A2q8">',
@@ -71,9 +65,6 @@ def gasCosts(province, city):
 
 
     def lastUpdate(province=province, city=city):
-        req = urllib.request.Request('https://www.gasbuddy.com/gasprices/' + province + "/" + city, headers={
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'})
-        html = str(urllib.request.urlopen(req).read())
         listUpdates, lastUpdates = [], []
         for match in re.finditer('<span class="ReportedBy-module__postedTime___J5H9Z">', html): listUpdates.append(
             match.end())
