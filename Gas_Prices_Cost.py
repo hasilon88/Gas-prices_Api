@@ -2,9 +2,13 @@ import urllib.request
 import re
 
 def gasCosts(province, city):
+
     req = urllib.request.Request('https://www.gasbuddy.com/gasprices/' + province + "/" + city, headers={
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'})
     html = str(urllib.request.urlopen(req).read())
+
+    def replace_pattern(input_string, pattern, replacement):
+        return re.sub(pattern, replacement, input_string)
 
     def getGasPrices(province=province, city=city):
         lastIndexes, prices = [], []
@@ -37,12 +41,14 @@ def gasCosts(province, city):
                 address += html[index]
                 index += 1
             address = address.replace("<br", "")
+            address = replace_pattern(address, "\\\\xc3\\\\xa9", "e")
             listOfAdresses.append(address)
             city_province = ""
             index += 2
             while html[index] != '<':
                 city_province += html[index]
                 index += 1
+            city_province = replace_pattern(city_province, "\\xc3\\xa9", "e")    
             listCitiesProvinces.append(city_province)
         for i in range(0, len(listOfAdresses), 1): finalList.append(listOfAdresses[i] + " " + listCitiesProvinces[i])
         return finalList
@@ -60,6 +66,7 @@ def gasCosts(province, city):
             while html[i] != "<":
                 name += html[i]
                 i += 1
+            name = replace_pattern(name, "\\\\xc3\\\\xa9", "e")
             gasStations.append(name)
         return gasStations
 
