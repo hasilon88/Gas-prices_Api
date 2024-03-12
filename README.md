@@ -9,8 +9,12 @@ To use this:
 
   1. Clone this repo and get flask running
   2. Copy paste the following url in any browser and modify it for your needs:
-  `http//:www.localhost:8000/{province}/{city}`
+  ```
+http//:www.localhost:8000/{province}/{city}
+```
 
 **Option 2**
   - Copy paste the following url in any browser and modify it for your needs:
-      `https://gas-prices-api.vercel.app/{province}/{city}`
+```
+https://gas-prices-api.vercel.app/{province}/{city}
+```
