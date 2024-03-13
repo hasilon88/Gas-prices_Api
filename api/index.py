@@ -113,7 +113,7 @@ def landingPage():
 @cross_origin()
 @app.get('/<province>/<city>')
 def get_info(province, city):
-    return get_gas_info(province, city)
+    return get_gas_info(str(province).lower(), str(city).lower())
  
  
 # Main Driver Function 
