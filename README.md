@@ -46,18 +46,18 @@ Here's an example of the return structure:
 
 ```json
 [
-  {
-    "station_name": "Station 1",
-    "price": 1.25,
-    "address": "123 Gas Street, Toronto, ON",
-    "last_update": "2024-03-22 09:30"
-  },
-  {
-    "station_name": "Station 2",
-    "price": 1.28,
-    "address": "456 Gas Avenue, Toronto, ON",
-    "last_update": "2024-03-22 09:35"
-  }
+    {
+        "address": "QC-132",
+        "last_update": "06 hours",
+        "price": 156.9,
+        "station_name": "Harnois"
+    },
+    {
+        "address": "3176 Blvd Taschereau",
+        "last_update": "01 hour",
+        "price": 160.9,
+        "station_name": "Petro-Canada"
+    }
 ]
 ```
 ### Important Note
