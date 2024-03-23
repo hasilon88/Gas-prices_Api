@@ -1,4 +1,4 @@
-## GasBuddy Gas Price API
+## GasBuddy Gas Price API: *Access Real-Time Gas Prices with Flask*
 
 Welcome to the GasBuddy Gas Price API! 🚗💨 This project contains a script that scrapes gas prices from a website and makes them available through a Flask server.
 
